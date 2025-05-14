@@ -11,11 +11,6 @@
 },
 {
   "directory": "/home/mcgrew/projects/dwrandomizer",
-  "command": "/usr/bin/cc  -I/home/mcgrew/projects/dwrandomizer/common  -o CMakeFiles/dwrandomizer.dir/common/sprites.c.o -c /home/mcgrew/projects/dwrandomizer/common/sprites.c",
-  "file": "/home/mcgrew/projects/dwrandomizer/common/sprites.c"
-},
-{
-  "directory": "/home/mcgrew/projects/dwrandomizer",
   "command": "/usr/bin/cc  -I/home/mcgrew/projects/dwrandomizer/common  -o CMakeFiles/dwrandomizer.dir/common/dwr.c.o -c /home/mcgrew/projects/dwrandomizer/common/dwr.c",
   "file": "/home/mcgrew/projects/dwrandomizer/common/dwr.c"
 },

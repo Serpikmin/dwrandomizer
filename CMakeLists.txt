@@ -34,7 +34,6 @@ include_directories(common)
 
 set(SOURCE_FILES
         common/crc64.c
-        common/sprites.c
         common/dwr.c
         common/map.c
         common/dungeon_maps.c

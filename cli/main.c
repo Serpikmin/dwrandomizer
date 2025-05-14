@@ -7,7 +7,6 @@
 #include "dwr.h"
 #include "dwr_types.h"
 #include "map.h"
-#include "sprites.h"
 
 
 static void print_usage(const char *command, char *default_flags)
@@ -22,15 +21,6 @@ static void print_usage(const char *command, char *default_flags)
     printf("If flags are not specified, the flags \"%s\" will be used\n",
             default_flags);
     printf("If the seed is not specified, a random seed will be chosen\n");
-    printf("\n");
-    printf("Sprite should be one of: ");
-    for(i=0; i < sprite_count(); i++) {
-        if (i) {
-            printf(", %s", dwr_sprite_names[i]);
-        } else {
-            printf("%s", dwr_sprite_names[i]);
-        }
-    }
     printf("\n");
 }
 

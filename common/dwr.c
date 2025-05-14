@@ -20,7 +20,6 @@
 #include "mt64.h"
 #include "polyfit.h"
 #include "base32.h"
-#include "sprites.h"
 #include "expansion.h"
 #include "credit_music.h"
 #include "flute_music.h"
@@ -3440,7 +3439,6 @@ void apply_stuff_to_rom(dw_rom *rom)
     lower_xp_reqs(rom);
     dwr_death_necklace(rom);
     dwr_menu_wrap(rom);
-    randomize_flute_song(rom);
     dwr_speed_hacks(rom);
     open_charlock(rom);
     chaos_mode(rom);
@@ -3573,7 +3571,6 @@ uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
     skip_vanilla_credits(rom);
     setup_expansion(rom);
 
-    sprite(rom, sprite_name);
     invisible_npcs(rom); // in case the custom sprite also changed NPCS.
     noir_mode(rom);
 
