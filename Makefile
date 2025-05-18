@@ -1,4 +1,4 @@
-# Uncomment below and replace the filepaths!
+## Uncomment below and replace the filepaths!
 
 # dwr: common/* /home/peter/dwrandomizer-wrapper/*.py*
 # 	rm -rf /home/peter/dwrandomizer-wrapper/build
