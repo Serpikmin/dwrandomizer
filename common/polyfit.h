@@ -2,6 +2,8 @@
 #ifndef _DWR_POLYFIT_H_
 #define _DWR_POLYFIT_H_
 
+#include <math.h>
+
 typedef struct {
     double y_min;
     double y_max;

@@ -5,6 +5,7 @@
 #ifndef DWRANDOMIZER_CHAOS_H
 #define DWRANDOMIZER_CHAOS_H
 
+#include <math.h>
 #include "dwr_types.h"
 
 #ifdef __cplusplus
