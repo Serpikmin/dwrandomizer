@@ -3399,6 +3399,24 @@ void new_flags_ram_init(dw_rom *rom)
 }
 
 /**
+ * Prevent chests from granting items (for AP)
+ * 
+ * @param rom The rom struct
+ */
+void ap_changes(dw_rom *rom)
+{
+    // Remove door from throne room
+    set_dungeon_tile(rom, TANTEGEL_THRONE_ROOM, 4, 7, TOWN_TILE_BRICK);
+
+    // Update text to display AP item instead of Tablet
+    set_text(rom, 0x7B56, "APItem");
+    // Hook into ChkTrsrKey to jump to the Tablet instead
+    vpatch(rom, 0xE226, 3, 0x4C, 0x49, 0xE3);
+    // Don't show the tablet description
+    vpatch(rom, 0xE35C, 4, 0xEA, 0xEA, 0xEA, 0xEA);
+}
+
+/**
  * Does most of the randomization. Put in a new function since it's now reused
  *
  * @param rom The rom struct
@@ -3487,6 +3505,9 @@ void apply_stuff_to_rom(dw_rom *rom)
     unbreakable_keys(rom);
     ascetic_king(rom);
     chest_gold_amount(rom);
+
+    // AP Functionality
+    ap_changes(rom);
 }
 
 
@@ -3537,8 +3558,7 @@ uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
 
     check_structs();
 
-    snprintf(output_file, 1024, "%s/DWRando.%"PRIu64".%s.nes", output_dir,
-            seed, flags);
+    snprintf(output_file, 1024, "%s/Dragon Warrior (USA) (Rev A).nes", output_dir);
     printf("Using seed# %"PRIu64"\n", seed);
     printf("Using flags %s\n", flags);
 

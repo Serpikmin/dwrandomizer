@@ -279,7 +279,7 @@ static void no_chest_shuffle(dw_rom *rom)
         search_items[0] = 0;
     }
 
-    rewrite_search_take_code(rom, search_items);
+    // rewrite_search_take_code(rom, search_items);
     chest = rom->chests;
     for (i=0; i < CHEST_COUNT; i++) {
         /* don't move the staff or starting key */
@@ -616,7 +616,7 @@ static void shuffle_chests(dw_rom *rom)
             search_items[i] = *(key_item++);
         }
     }
-    rewrite_search_take_code(rom, search_items);
+    // rewrite_search_take_code(rom, search_items);
 
     while (key_item < (key_items + sizeof(key_items))) {
         /* overwite cursed belts with the remaining key items */
