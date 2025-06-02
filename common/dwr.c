@@ -3414,6 +3414,46 @@ void ap_changes(dw_rom *rom)
     vpatch(rom, 0xE226, 3, 0x4C, 0x49, 0xE3);
     // Don't show the tablet description
     vpatch(rom, 0xE35C, 4, 0xEA, 0xEA, 0xEA, 0xEA);
+
+    // Overwrite the message speed variable to always be set to fast, frees up the byte
+    // vpatch(rom, 0x693E, 2, 0xA2, 0x00);
+    // vpatch(rom, 0x7A31, 2, 0xA2, 0x00);
+    // vpatch(rom, 0xBD31, 2, 0xEA, 0xEA);
+    // vpatch(rom, 0xF8D6, 2, 0xEA, 0xEA);
+    // vpatch(rom, 0xF8E3, 2, 0xEA, 0xEA);
+    // vpatch(rom, 0xF909, 2, 0xEA, 0xEA);
+    // vpatch(rom, 0xFA7D, 2, 0xA9, 0x00);
+    // vpatch(rom, 0xFBCA, 2, 0xEA, 0xEA);
+
+    // Hook into SaveData
+    vpatch(rom, 0xFA18, 4, 
+        0x20, 0x54, 0xFF,          // JSR 0xFF54
+        0xEA                       // NOP
+    );
+
+    // Save item received index in RAM (0x0E) to index in SRAM (0x16 relative to start of save file)
+    vpatch(rom, 0xFF54, 11,
+        0xAD, 0x0E, 0x00,          // LDA 0x000E
+        0x8D, 0x00, 0x70,          // STA 0x7000
+        0xA0, 0x00,                // LDY #$00              (Original code)
+        0xA5, 0xBA,                // LDA ExpLB             (Original code)
+        0x60                       // RTS
+    );
+
+    // Hook into LoadSavedData
+    vpatch(rom, 0xFB6B, 4,
+        0x20, 0x5F, 0xFF,           // JSR 0xFF5F
+        0xEA                        // NOP
+    );
+
+    // Load item received index from SRAM to RAM
+    vpatch(rom, 0xFF5F, 11,
+        0xAD, 0x00, 0x70,           // LDA 0x7000
+        0x8D, 0x0E, 0x00,           // STA 0x000E
+        0xA0, 0x00,                 // LDY #$00             (Original code)
+        0xB1, 0x22,                 // LDA (GameDatPtr), Y  (Original code)
+        0x60                        // RTS
+    );
 }
 
 /**

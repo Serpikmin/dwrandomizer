@@ -14,7 +14,7 @@ C288  | C4F5 | 621  | 3    | This section of code goes unused
 C6C9  | C6F0 |  39  | 3    | This section of code goes unused
 C7EC  | C9B5 | 457  | 3    | This section of code goes unused
 F232  | F35B | 129  | 3    | This section of data goes unused
-FF54  | FF74 |  32  | 3    | Unused space (FF)
+FF6A  | FF74 |  10  | 3    | Unused space (FF)
 FF7D  | FF8E |  11  | 3    | Unused space (FF)
 
 ===============================================================================
@@ -45,3 +45,8 @@ FF7D  | FF8E |  17  | 3    | Fighter's Ring fix
 FF54  | FF57 |   3  | 3    | Fighter's Ring fix
 FF54  | FF73 |  31  | 3    | Death Necklace changes
 
+Space used by AP code
+
+Start | End  | Size | Bank | Comments
+-------------------------------------------------------------------------------
+FF54  | FF6A |  22  | 3    | Store and Load Item Received Index between SRAM/RAM
