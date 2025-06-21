@@ -3446,14 +3446,14 @@ void ap_changes(dw_rom *rom)
     );
 
     // Replace contents of quest item chests
-    // vpatch(rom, 0x5E24, 1, 0x02);  // Stones of Sunlight
-    // vpatch(rom, 0x5E28, 1, 0x02);  // Staff of Rain
-    // vpatch(rom, 0x5E3C, 1, 0x02);  // Silver Harp
-    // vpatch(rom, 0x5E40, 1, 0x02);  // Erdrick's Sword
+    vpatch(rom, 0x5E24, 1, 0x02);  // Stones of Sunlight
+    vpatch(rom, 0x5E28, 1, 0x02);  // Staff of Rain
+    vpatch(rom, 0x5E3C, 1, 0x02);  // Silver Harp
+    vpatch(rom, 0x5E40, 1, 0x02);  // Erdrick's Sword
 
     // Stop magic key vendors
-    // set_text(rom, 0x83A7, "`Sorry \xf8, I'm all out of magic keys! Perhaps someone in the multiworld could help?`");
-    // vpatch(rom, 0xD7FE, 6, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA);   // NO-OP Magic Key purchase choice
+    set_text(rom, 0x83A7, "`Sorry \xf8, I'm all out of magic keys! Perhaps someone in the multiworld could help?`");
+    vpatch(rom, 0xD7FE, 6, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA);   // NO-OP Magic Key purchase choice
 }
 
 /**
