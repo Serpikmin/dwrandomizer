@@ -3415,16 +3415,6 @@ void ap_changes(dw_rom *rom)
     // Don't show the tablet description
     vpatch(rom, 0xE35C, 4, 0xEA, 0xEA, 0xEA, 0xEA);
 
-    // Overwrite the message speed variable to always be set to fast, frees up the byte
-    // vpatch(rom, 0x693E, 2, 0xA2, 0x00);
-    // vpatch(rom, 0x7A31, 2, 0xA2, 0x00);
-    // vpatch(rom, 0xBD31, 2, 0xEA, 0xEA);
-    // vpatch(rom, 0xF8D6, 2, 0xEA, 0xEA);
-    // vpatch(rom, 0xF8E3, 2, 0xEA, 0xEA);
-    // vpatch(rom, 0xF909, 2, 0xEA, 0xEA);
-    // vpatch(rom, 0xFA7D, 2, 0xA9, 0x00);
-    // vpatch(rom, 0xFBCA, 2, 0xEA, 0xEA);
-
     // Hook into SaveData
     vpatch(rom, 0xFA18, 4, 
         0x20, 0x54, 0xFF,          // JSR 0xFF54
@@ -3454,6 +3444,16 @@ void ap_changes(dw_rom *rom)
         0xB1, 0x22,                 // LDA (GameDatPtr), Y  (Original code)
         0x60                        // RTS
     );
+
+    // Replace contents of quest item chests
+    // vpatch(rom, 0x5E24, 1, 0x02);  // Stones of Sunlight
+    // vpatch(rom, 0x5E28, 1, 0x02);  // Staff of Rain
+    // vpatch(rom, 0x5E3C, 1, 0x02);  // Silver Harp
+    // vpatch(rom, 0x5E40, 1, 0x02);  // Erdrick's Sword
+
+    // Stop magic key vendors
+    // set_text(rom, 0x83A7, "`Sorry \xf8, I'm all out of magic keys! Perhaps someone in the multiworld could help?`");
+    // vpatch(rom, 0xD7FE, 6, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA);   // NO-OP Magic Key purchase choice
 }
 
 /**
