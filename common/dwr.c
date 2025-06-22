@@ -3454,6 +3454,10 @@ void ap_changes(dw_rom *rom)
     // Stop magic key vendors
     set_text(rom, 0x83A7, "`Sorry \xf8, I'm all out of magic keys! Perhaps someone in the multiworld could help?`");
     vpatch(rom, 0xD7FE, 6, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA);   // NO-OP Magic Key purchase choice
+
+    // Write AP signature and version
+    vpatch(rom, 0x7FF0, 16, 
+        0x44, 0x57, 0x41, 0x50, 0x56, 0x30, 0x31, 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);  // DWAPV010______
 }
 
 /**
@@ -3598,7 +3602,7 @@ uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
 
     check_structs();
 
-    snprintf(output_file, 1024, "%s/Dragon Warrior (USA) (Rev A).nes", output_dir);
+    snprintf(output_file, 1024, "%s", output_dir);
     printf("Using seed# %"PRIu64"\n", seed);
     printf("Using flags %s\n", flags);
 
