@@ -636,6 +636,9 @@ static void randomize_zone_layout(dw_rom *rom)
     int i;
     dw_warp *tantegel = &rom->map.warps_from[WARP_TANTEGEL];
 
+    if (!RANDOMIZE_ZONES(rom))
+        return;
+
     printf("Randomizing enemy zone layout...\n");
 
     for (i=0; i < 32; i++) {
