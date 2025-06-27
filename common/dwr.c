@@ -3402,7 +3402,7 @@ void new_flags_ram_init(dw_rom *rom)
 }
 
 /**
- * Prevent chests from granting items (for AP)
+ * Patches the ROM for AP specific changes
  * 
  * @param rom The rom struct
  */
@@ -3411,11 +3411,11 @@ void ap_changes(dw_rom *rom)
     // Remove door from throne room
     set_dungeon_tile(rom, TANTEGEL_THRONE_ROOM, 4, 7, TOWN_TILE_BRICK);
 
-    // Update text to display AP item instead of Tablet
+    // Update text to display APItem instead of Tablet
     set_text(rom, 0x7B56, "APItem");
     // Hook into ChkTrsrKey to jump to the Tablet instead
     vpatch(rom, 0xE226, 3, 0x4C, 0x49, 0xE3);
-    // Don't show the tablet description
+    // Don't show the tablet description (all chests contain a useless APItem as a result)
     vpatch(rom, 0xE35C, 4, 0xEA, 0xEA, 0xEA, 0xEA);
 
     // Hook into SaveData
@@ -3448,7 +3448,7 @@ void ap_changes(dw_rom *rom)
         0x60                        // RTS
     );
 
-    // Replace contents of quest item chests
+    // Replace contents of quest item chests so they don't despawn when the player is sent them
     vpatch(rom, 0x5E24, 1, 0x02);  // Stones of Sunlight
     vpatch(rom, 0x5E28, 1, 0x02);  // Staff of Rain
     vpatch(rom, 0x5E3C, 1, 0x02);  // Silver Harp
