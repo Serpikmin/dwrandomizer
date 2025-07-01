@@ -3458,6 +3458,10 @@ void ap_changes(dw_rom *rom)
     set_text(rom, 0x83A7, "`Sorry \xf8, I'm all out of magic keys! Perhaps someone in the multiworld could help?`");
     vpatch(rom, 0xD7FE, 6, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA);   // NO-OP Magic Key purchase choice
 
+    // Prevent the magic key from being sold
+    vpatch(rom, 0x196B, 1, 0x00);
+    vpatch(rom, 0x7E3A, 1, 0x00);
+
     // Staff of Rain guy lets you in even if you already have it
     vpatch(rom, 0xD2FC, 3, 0x4C, 0x16, 0xD3);
 
