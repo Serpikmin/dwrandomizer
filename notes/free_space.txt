@@ -49,4 +49,4 @@ Space used by AP code
 
 Start | End  | Size | Bank | Comments
 -------------------------------------------------------------------------------
-FF54  | FF6A |  22  | 3    | Store and Load Item Received Index between SRAM/RAM
+C815  | C82C |  22  | 3    | Store and Load Item Received Index between SRAM/RAM

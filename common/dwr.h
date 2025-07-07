@@ -9,7 +9,7 @@
 #include "build.h"
 #include "dwr_types.h"
 
-#define DWR_VERSION "ARCHIPELAGO v0.2.1"
+#define DWR_VERSION "ARCHIPELAGO v0.2.2"
 #define VERSION DWR_VERSION
 
 #define DEFAULT_FLAGS "IVIAAVCEKACAAAAAAAAAAEAUAAIBAAAAAAAAAAAA"
