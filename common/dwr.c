@@ -3417,15 +3417,14 @@ void ap_changes(dw_rom *rom)
     vpatch(rom, 0xE226, 3, 0x4C, 0x49, 0xE3);
     // Don't show the tablet description (all chests contain a useless APItem as a result)
     vpatch(rom, 0xE35C, 4, 0xEA, 0xEA, 0xEA, 0xEA);
+    
+    const uint16_t save_index_newcode = find_free_space(rom->content, 0xc422, 11);
 
     // Hook into SaveData
-    vpatch(rom, 0xFA18, 4, 
-        0x20, 0x15, 0xC8,          // JSR 0xC815
-        0xEA                       // NOP
-    );
+    vpatch(rom, 0xFA18, 4, 0x20, save_index_newcode & 0xff, (save_index_newcode >> 8) & 0xff, 0xea);
 
     // Save item received index in RAM (0x0E) to index in SRAM (0x16 relative to start of save file)
-    vpatch(rom, 0xC815, 11,
+    vpatch(rom, save_index_newcode, 11,
         0xAD, 0x0E, 0x00,          // LDA 0x000E
         0x8D, 0x00, 0x70,          // STA 0x7000
         0xA0, 0x00,                // LDY #$00              (Original code)
@@ -3433,20 +3432,22 @@ void ap_changes(dw_rom *rom)
         0x60                       // RTS
     );
 
+    const uint16_t load_index_newcode = find_free_space(rom->content, 0xc422, 11);
+
     // Hook into LoadSavedData
-    vpatch(rom, 0xFB6B, 4,
-        0x20, 0x21, 0xC8,           // JSR 0xC821
-        0xEA                        // NOP
-    );
+    vpatch(rom, 0xFB6B, 4, 0x20, load_index_newcode & 0xff, (load_index_newcode >> 8) & 0xff, 0xea);
 
     // Load item received index from SRAM to RAM
-    vpatch(rom, 0xC821, 11,
+    vpatch(rom, load_index_newcode, 11,
         0xAD, 0x00, 0x70,           // LDA 0x7000
         0x8D, 0x0E, 0x00,           // STA 0x000E
         0xA0, 0x00,                 // LDY #$00             (Original code)
         0xB1, 0x22,                 // LDA (GameDatPtr), Y  (Original code)
         0x60                        // RTS
     );
+
+    printf("The save_index_newcode is at: %04x" PRIu16 "\n", save_index_newcode);
+    printf("The load_index_newcode is at: %04x" PRIu16 "\n", load_index_newcode);
 
     // Replace contents of quest item chests so they don't despawn when the player is sent them
     vpatch(rom, 0x5E24, 1, 0x02);  // Stones of Sunlight
