@@ -1087,7 +1087,7 @@ static uint8_t *pad_title_screen(uint8_t *pos, uint8_t *end, int reserved)
  *
  * @param rom The rom struct
  */
-static void update_title_screen(dw_rom *rom)
+static void update_title_screen(dw_rom *rom, char* vers)
 {
     unsigned char text[33] = { 0 };
     uint8_t *pos, *end;
@@ -1096,11 +1096,13 @@ static void update_title_screen(dw_rom *rom)
     end = &rom->content[0x3fb5];
     text[32] = '\0';
 
+    char version[19];
+    snprintf(version, 19, "ARCHIPELAGO v%c.%c.%c\n", vers[0], vers[1], vers[2]);
     printf("Updating title screen...\n");
     pos = pvpatch(pos, 4, 0xf7, 32, 0x5f, 0xfc); /* blank line */
     pos = center_title_text(pos, "RANDOMIZER");  /* RANDOMIZER text */
     pos = pvpatch(pos, 4, 0xf7, 32, 0x5f, 0xfc); /* blank line */
-    pos = center_title_text(pos, DWR_VERSION);   /* version number */
+    pos = center_title_text(pos, version);   /* version number */
 
     pos = pvpatch(pos, 4, 0xf7, 32, 0x5f, 0xfc); /* blank line */
     pos = pvpatch(pos, 4, 0xf7, 32, 0x5f, 0xfc); /* blank line */
@@ -3406,7 +3408,7 @@ void new_flags_ram_init(dw_rom *rom)
  * 
  * @param rom The rom struct
  */
-void ap_changes(dw_rom *rom)
+void ap_changes(dw_rom *rom, char* vers)
 {
     // Remove door from throne room
     set_dungeon_tile(rom, TANTEGEL_THRONE_ROOM, 4, 7, TOWN_TILE_BRICK);
@@ -3467,8 +3469,13 @@ void ap_changes(dw_rom *rom)
     vpatch(rom, 0xD2FC, 3, 0x4C, 0x16, 0xD3);
 
     // Write AP signature and version
+
+    const int major = 0x30 + strtol((char[2]) { (char) vers[0], '\0' }, NULL, 10);
+    const int minor = 0x30 + strtol((char[2]) { (char) vers[1], '\0' }, NULL, 10);
+    const int bugfix = 0x30 + strtol((char[2]) { (char) vers[2], '\0' }, NULL, 10);
+
     vpatch(rom, 0x7FE0, 16, 
-        0x44, 0x57, 0x41, 0x50, 0x56, 0x30, 0x32, 0x32, 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);  // DWAPV0220_____
+        0x44, 0x57, 0x41, 0x50, 0x56, major, minor, bugfix, 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);  // DWAPVMmb0_____
 }
 
 /**
@@ -3476,7 +3483,7 @@ void ap_changes(dw_rom *rom)
  *
  * @param rom The rom struct
  */
-void apply_stuff_to_rom(dw_rom *rom)
+void apply_stuff_to_rom(dw_rom *rom, char* vers)
 {
 
     /* Clear the unused code so we can make sure it's unused */
@@ -3562,7 +3569,7 @@ void apply_stuff_to_rom(dw_rom *rom)
     chest_gold_amount(rom);
 
     // AP Functionality
-    ap_changes(rom);
+    ap_changes(rom, vers);
 }
 
 
@@ -3572,7 +3579,7 @@ void apply_stuff_to_rom(dw_rom *rom)
  * This only returns the CRC so it can be used by the original dwr_randomize
  *
  */
-uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, char *flags)
+uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, char *flags, char* vers)
 {
     uint64_t crc = 0;
     dw_rom rom;
@@ -3583,7 +3590,7 @@ uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, 
     }
     rom.seed = seed;
 
-    apply_stuff_to_rom(&rom);
+    apply_stuff_to_rom(&rom, vers);
 
     crc = crc64(0, rom.content, 0x10000);
 
@@ -3605,7 +3612,7 @@ uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, 
  *      options which don't affect gameplay.
  */
 uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
-        const char *sprite_name, const char* output_dir)
+        const char *sprite_name, const char* output_dir, char* vers)
 {
     uint64_t crc = 0;
     char output_file[1025] = { 0 };
@@ -3624,19 +3631,19 @@ uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
     rom->seed = seed;
     winter_theme(rom);
 
-    apply_stuff_to_rom(rom);
+    apply_stuff_to_rom(rom, vers);
 
     crc = crc64(0, rom->content, 0x10000);
     printf("Checksum: %016"PRIx64"\n", crc);
     if(WINTER_THEME(rom))
     {
-        crc = dwr_randomizeWithoutWinterTheme(input_file, seed, flags);
+        crc = dwr_randomizeWithoutWinterTheme(input_file, seed, flags, vers);
         printf("Checksum without winter theme: %016"PRIx64"\n", crc);
     }
 
     begin_quest_checksum(rom, crc);
 
-    update_title_screen(rom);
+    update_title_screen(rom, vers);
     no_screen_flash(rom);
     no_red_flash(rom);
 

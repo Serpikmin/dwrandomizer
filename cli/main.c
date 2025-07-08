@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 
     printf("Randomizing using seed: %"PRIu64" with flags %s\n", seed, flags);
 
-    dwr_randomize(input_file, seed, flags, sprite, output_dir);
+    dwr_randomize(input_file, seed, flags, sprite, output_dir, "045");
 
     return 0;
 }
