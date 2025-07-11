@@ -3468,8 +3468,34 @@ void ap_changes(dw_rom *rom, char* vers)
     // Staff of Rain guy lets you in even if you already have it
     vpatch(rom, 0xD2FC, 3, 0x4C, 0x16, 0xD3);
 
-    // Write AP signature and version
+    // Replace Search Spot items with APItem and write to RAM they were found
 
+    // Erdrick's Token
+    vpatch(rom, 0xE11D, 8, 
+        0xA9, 0x80,           // LDA 0x80 (Immediate Value)
+        0x8D, 0x01, 0x00,     // STA 0x0001
+        0x4C, 0x4C, 0xE3      // JMP 0xE34C
+    );
+
+    // Fairy Flute
+    vpatch(rom, 0xE15D, 1, 0x40); // LDA with Tablet instead of Fairy Flute (Rest is unchanged)
+
+    // Erdrick's Armor
+    vpatch(rom, 0xE172, 5, 
+        0xA9, 0x20,           // LDA 0x20 (Immediate Value)
+        0x4C, 0x1F, 0xE1      // JMP 0xE11F 
+    );
+
+    // Get rid of DmgNotUsed appearances just to be safe
+    vpatch(rom, 0xE668, 2, 0xEA, 0xEA);
+    vpatch(rom, 0xE698, 2, 0xEA, 0xEA);
+    vpatch(rom, 0xECFA, 2, 0xEA, 0xEA);
+    vpatch(rom, 0xED27, 2, 0xEA, 0xEA);
+
+    // Clear rest of code for later maybe
+    vpatch(rom, 0xE177, 18, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+
+    // Write AP signature and version
     const int major = 0x30 + strtol((char[2]) { (char) vers[0], '\0' }, NULL, 10);
     const int minor = 0x30 + strtol((char[2]) { (char) vers[1], '\0' }, NULL, 10);
     const int bugfix = 0x30 + strtol((char[2]) { (char) vers[2], '\0' }, NULL, 10);
