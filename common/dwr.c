@@ -3472,17 +3472,17 @@ void ap_changes(dw_rom *rom, char* vers)
 
     // Erdrick's Token
     vpatch(rom, 0xE11D, 8, 
-        0xA9, 0x80,           // LDA 0x80 (Immediate Value)
+        0xA9, 0x81,           // LDA 0x81 (Immediate Value)
         0x8D, 0x01, 0x00,     // STA 0x0001
         0x4C, 0x4C, 0xE3      // JMP 0xE34C
     );
 
     // Fairy Flute
-    vpatch(rom, 0xE15D, 1, 0x40); // LDA with Tablet instead of Fairy Flute (Rest is unchanged)
+    vpatch(rom, 0xE15D, 1, 0x41); // LDA with Tablet instead of Fairy Flute (Rest is unchanged)
 
     // Erdrick's Armor
     vpatch(rom, 0xE172, 5, 
-        0xA9, 0x20,           // LDA 0x20 (Immediate Value)
+        0xA9, 0x21,           // LDA 0x21 (Immediate Value)
         0x4C, 0x1F, 0xE1      // JMP 0xE11F 
     );
 
