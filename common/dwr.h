@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "build.h"
 #include "dwr_types.h"
@@ -127,7 +128,7 @@ extern "C" {
  *      options which don't affect gameplay.
  */
 uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
-        const char *sprite_name, const char* output_dir, char* vers, BOOL searches, BOOL shopsanity);
+        const char *sprite_name, const char* output_dir, char* vers, bool searches, bool shopsanity);
 uint16_t set_text(dw_rom *rom, const size_t address, char *text);
 uint16_t find_free_space(uint8_t *content, uint16_t start, uint8_t n);
 

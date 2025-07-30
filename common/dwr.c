@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <time.h>
+#include <stdbool.h>
 
 #include "dwr.h"
 #include "patch.h"
@@ -3408,7 +3409,7 @@ void new_flags_ram_init(dw_rom *rom)
  * 
  * @param rom The rom struct
  */
-void ap_changes(dw_rom *rom, char* vers, BOOL searches, BOOL shopsanity)
+void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
 {
     // Remove door from throne room
     set_dungeon_tile(rom, TANTEGEL_THRONE_ROOM, 4, 7, TOWN_TILE_BRICK);
@@ -3548,7 +3549,7 @@ void ap_changes(dw_rom *rom, char* vers, BOOL searches, BOOL shopsanity)
  *
  * @param rom The rom struct
  */
-void apply_stuff_to_rom(dw_rom *rom, char* vers, BOOL searches, BOOL shopsanity)
+void apply_stuff_to_rom(dw_rom *rom, char* vers, bool searches, bool shopsanity)
 {
 
     /* Clear the unused code so we can make sure it's unused */
@@ -3645,7 +3646,7 @@ void apply_stuff_to_rom(dw_rom *rom, char* vers, BOOL searches, BOOL shopsanity)
  *
  */
 uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, char *flags, char* vers, 
-                                         BOOL searches, BOOL shopsanity)
+                                         bool searches, bool shopsanity)
 {
     uint64_t crc = 0;
     dw_rom rom;
@@ -3678,7 +3679,7 @@ uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, 
  *      options which don't affect gameplay.
  */
 uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
-        const char *sprite_name, const char* output_dir, char* vers, BOOL searches, BOOL shopsanity)
+        const char *sprite_name, const char* output_dir, char* vers, bool searches, bool shopsanity)
 {
     uint64_t crc = 0;
     char output_file[1025] = { 0 };
