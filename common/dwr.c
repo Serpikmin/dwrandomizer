@@ -3408,7 +3408,7 @@ void new_flags_ram_init(dw_rom *rom)
  * 
  * @param rom The rom struct
  */
-void ap_changes(dw_rom *rom, char* vers)
+void ap_changes(dw_rom *rom, char* vers, BOOL searches, BOOL shopsanity)
 {
     // Remove door from throne room
     set_dungeon_tile(rom, TANTEGEL_THRONE_ROOM, 4, 7, TOWN_TILE_BRICK);
@@ -3469,22 +3469,26 @@ void ap_changes(dw_rom *rom, char* vers)
     vpatch(rom, 0xD2FC, 3, 0x4C, 0x16, 0xD3);
 
     // Replace Search Spot items with APItem and write to RAM they were found
+    if (searches) {
+        // Erdrick's Token
+        vpatch(rom, 0xE11D, 8, 
+            0xA9, 0x81,           // LDA 0x81 (Immediate Value)
+            0x8D, 0x01, 0x00,     // STA 0x0001
+            0x4C, 0x4C, 0xE3      // JMP 0xE34C
+        );
 
-    // Erdrick's Token
-    vpatch(rom, 0xE11D, 8, 
-        0xA9, 0x81,           // LDA 0x81 (Immediate Value)
-        0x8D, 0x01, 0x00,     // STA 0x0001
-        0x4C, 0x4C, 0xE3      // JMP 0xE34C
-    );
+        // Fairy Flute
+        vpatch(rom, 0xE15D, 1, 0x41); // LDA with Tablet instead of Fairy Flute (Rest is unchanged)
 
-    // Fairy Flute
-    vpatch(rom, 0xE15D, 1, 0x41); // LDA with Tablet instead of Fairy Flute (Rest is unchanged)
+        // Erdrick's Armor
+        vpatch(rom, 0xE172, 5, 
+            0xA9, 0x21,           // LDA 0x21 (Immediate Value)
+            0x4C, 0x1F, 0xE1      // JMP 0xE11F 
+        );
 
-    // Erdrick's Armor
-    vpatch(rom, 0xE172, 5, 
-        0xA9, 0x21,           // LDA 0x21 (Immediate Value)
-        0x4C, 0x1F, 0xE1      // JMP 0xE11F 
-    );
+        // Clear rest of code for later maybe
+        vpatch(rom, 0xE177, 18, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+    }
 
     // Get rid of DmgNotUsed appearances just to be safe
     vpatch(rom, 0xE668, 2, 0xEA, 0xEA);
@@ -3498,8 +3502,37 @@ void ap_changes(dw_rom *rom, char* vers)
         0x8D, 0x01, 0x00      // STA 0x0001
     );
 
-    // Clear rest of code for later maybe
-    vpatch(rom, 0xE177, 18, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+    // Shopsanity: Make buying equipment write to 0x01 in RAM instead of equipping it
+    if (shopsanity) {
+        // Weapons
+        vpatch(rom, 0xD627, 10, 
+            0x8D, 0x01, 0x00,     // STA 0x0001
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA
+        );
+
+        // Armor
+        vpatch(rom, 0xD645, 10, 
+            0x8D, 0x01, 0x00,     // STA 0x0001
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA
+        );
+
+        // Shield
+        vpatch(rom, 0xD654, 10, 
+            0x8D, 0x01, 0x00,     // STA 0x0001
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA
+        );
+
+        // Shopsanity: Disable equipment selling (All will come from APItems)
+        vpatch(rom, 0xD5C4, 27, 
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA,
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 
+            0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 
+            0xEA, 0xEA
+        );
+    }
+
 
     // Write AP signature and version
     const int major = 0x30 + strtol((char[2]) { (char) vers[0], '\0' }, NULL, 10);
@@ -3515,7 +3548,7 @@ void ap_changes(dw_rom *rom, char* vers)
  *
  * @param rom The rom struct
  */
-void apply_stuff_to_rom(dw_rom *rom, char* vers)
+void apply_stuff_to_rom(dw_rom *rom, char* vers, BOOL searches, BOOL shopsanity)
 {
 
     /* Clear the unused code so we can make sure it's unused */
@@ -3601,7 +3634,7 @@ void apply_stuff_to_rom(dw_rom *rom, char* vers)
     chest_gold_amount(rom);
 
     // AP Functionality
-    ap_changes(rom, vers);
+    ap_changes(rom, vers, searches, shopsanity);
 }
 
 
@@ -3611,7 +3644,8 @@ void apply_stuff_to_rom(dw_rom *rom, char* vers)
  * This only returns the CRC so it can be used by the original dwr_randomize
  *
  */
-uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, char *flags, char* vers)
+uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, char *flags, char* vers, 
+                                         BOOL searches, BOOL shopsanity)
 {
     uint64_t crc = 0;
     dw_rom rom;
@@ -3622,7 +3656,7 @@ uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, 
     }
     rom.seed = seed;
 
-    apply_stuff_to_rom(&rom, vers);
+    apply_stuff_to_rom(&rom, vers, searches, shopsanity);
 
     crc = crc64(0, rom.content, 0x10000);
 
@@ -3644,7 +3678,7 @@ uint64_t dwr_randomizeWithoutWinterTheme(const char* input_file, uint64_t seed, 
  *      options which don't affect gameplay.
  */
 uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
-        const char *sprite_name, const char* output_dir, char* vers)
+        const char *sprite_name, const char* output_dir, char* vers, BOOL searches, BOOL shopsanity)
 {
     uint64_t crc = 0;
     char output_file[1025] = { 0 };
@@ -3663,13 +3697,13 @@ uint64_t dwr_randomize(const char* input_file, uint64_t seed, char *flags,
     rom->seed = seed;
     winter_theme(rom);
 
-    apply_stuff_to_rom(rom, vers);
+    apply_stuff_to_rom(rom, vers, searches, shopsanity);
 
     crc = crc64(0, rom->content, 0x10000);
     printf("Checksum: %016"PRIx64"\n", crc);
     if(WINTER_THEME(rom))
     {
-        crc = dwr_randomizeWithoutWinterTheme(input_file, seed, flags, vers);
+        crc = dwr_randomizeWithoutWinterTheme(input_file, seed, flags, vers, searches, shopsanity);
         printf("Checksum without winter theme: %016"PRIx64"\n", crc);
     }
 
