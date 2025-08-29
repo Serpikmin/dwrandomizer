@@ -3469,6 +3469,9 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
     // Staff of Rain guy lets you in even if you already have it
     vpatch(rom, 0xD2FC, 3, 0x4C, 0x16, 0xD3);
 
+    // Prevent Gwaelin's Love from being added to inventory
+    vpatch(rom, 0xD3BC, 3, 0x4C, 0xEF, 0xD3);
+
     // Replace Search Spot items with APItem and write to RAM they were found
     if (searches) {
         // Erdrick's Token
