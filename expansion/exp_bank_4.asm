@@ -532,211 +532,212 @@ stats_data:
     .word $20c2
     .db "MONSTER     FOUGHT  WON DIED"
 
+    ; Hex Values are stored in the NES System Bus
     .db INSTR_SET_PPU
     .word $2102 ; PPU address
     .db "Slime         "      ; /* 0 */
-    .db INSTR_MON_STAT, 0
+    .db INSTR_MON_STAT, 0     ; 0x66C0
 
     .db INSTR_SET_PPU
     .word $2142 ; PPU address
     .db "Red Slime     "
-    .db INSTR_MON_STAT, 1
+    .db INSTR_MON_STAT, 1     ; 0x66C2
 
     .db INSTR_SET_PPU
     .word $2182 ; PPU address
     .db "Drakee        "
-    .db INSTR_MON_STAT, 2
+    .db INSTR_MON_STAT, 2     ; 0x66C4
 
     .db INSTR_SET_PPU
     .word $21c2 ; PPU address
     .db "Ghost         "
-    .db INSTR_MON_STAT, 3
+    .db INSTR_MON_STAT, 3     ; 0x66C6
 
     .db INSTR_SET_PPU
     .word $2202 ; PPU address
     .db "Magician      "
-    .db INSTR_MON_STAT, 4
+    .db INSTR_MON_STAT, 4     ; 0x66C8
 
     .db INSTR_SET_PPU
     .word $2242 ; PPU address
     .db "Magidrakee    "
-    .db INSTR_MON_STAT, 5
+    .db INSTR_MON_STAT, 5     ; 0x66CA
 
     .db INSTR_SET_PPU
     .word $2282 ; PPU address
     .db "Scorpion      "
-    .db INSTR_MON_STAT, 6
+    .db INSTR_MON_STAT, 6     ; 0x66CC
 
     .db INSTR_SET_PPU
     .word $22c2 ; PPU address
     .db "Druin         "
-    .db INSTR_MON_STAT, 7
+    .db INSTR_MON_STAT, 7     ; 0x66CE
 
     .db INSTR_SET_PPU
     .word $2302 ; PPU address
     .db "Poltergeist   "
-    .db INSTR_MON_STAT, 8
+    .db INSTR_MON_STAT, 8     ; 0x66D0
 
     .db INSTR_SET_PPU
     .word $2342 ; PPU address
     .db "Droll         "
-    .db INSTR_MON_STAT, 9
+    .db INSTR_MON_STAT, 9     ; 0x66D2
 
     .db INSTR_WAIT, 240
 
     .db INSTR_SET_PPU
     .word $2102 ; PPU address
     .db "Drakeema      "  ;  /* 10 */
-    .db INSTR_MON_STAT, 10
+    .db INSTR_MON_STAT, 10    ; 0x66D4
 
     .db INSTR_SET_PPU
     .word $2142 ; PPU address
     .db "Skeleton      "
-    .db INSTR_MON_STAT, 11
+    .db INSTR_MON_STAT, 11    ; 0x66D6
 
     .db INSTR_SET_PPU
     .word $2182 ; PPU address
     .db "Warlock       "
-    .db INSTR_MON_STAT, 12
+    .db INSTR_MON_STAT, 12    ; 0x66D8
 
     .db INSTR_SET_PPU
     .word $21c2 ; PPU address
     .db "Metal Scorpion"
-    .db INSTR_MON_STAT, 13
+    .db INSTR_MON_STAT, 13    ; 0x66DA
 
     .db INSTR_SET_PPU
     .word $2202 ; PPU address
     .db "Wolf          "
-    .db INSTR_MON_STAT, 14
+    .db INSTR_MON_STAT, 14    ; 0x66DC
 
     .db INSTR_SET_PPU
     .word $2242 ; PPU address
     .db "Wraith        "
-    .db INSTR_MON_STAT, 15
+    .db INSTR_MON_STAT, 15    ; 0x66DE
 
     .db INSTR_SET_PPU
     .word $2282 ; PPU address
     .db "Metal Slime   "
-    .db INSTR_MON_STAT, 16
+    .db INSTR_MON_STAT, 16    ; 0x66E0
 
     .db INSTR_SET_PPU
     .word $22c2 ; PPU address
     .db "Specter       "
-    .db INSTR_MON_STAT, 17
+    .db INSTR_MON_STAT, 17    ; 0x66E2
 
     .db INSTR_SET_PPU
     .word $2302 ; PPU address
     .db "Wolflord      "
-    .db INSTR_MON_STAT, 18
+    .db INSTR_MON_STAT, 18    ; 0x66E4
 
     .db INSTR_SET_PPU
     .word $2342 ; PPU address
     .db "Druinlord     "
-    .db INSTR_MON_STAT, 19
+    .db INSTR_MON_STAT, 19    ; 0x66E6
 
     .db INSTR_WAIT, 240
 
     .db INSTR_SET_PPU
     .word $2102 ; PPU address
     .db "Drollmagi     "  ; /* 20 */
-    .db INSTR_MON_STAT, 20
+    .db INSTR_MON_STAT, 20    ; 0x67E8
 
     .db INSTR_SET_PPU
     .word $2142 ; PPU address
     .db "Wyvern        "
-    .db INSTR_MON_STAT, 21
+    .db INSTR_MON_STAT, 21    ; 0x66EA
 
     .db INSTR_SET_PPU
     .word $2182 ; PPU address
     .db "Rogue Scorpion"
-    .db INSTR_MON_STAT, 22
+    .db INSTR_MON_STAT, 22    ; 0x66EC
 
     .db INSTR_SET_PPU
     .word $21c2 ; PPU address
     .db "Wraith Knight "
-    .db INSTR_MON_STAT, 23
+    .db INSTR_MON_STAT, 23    ; 0x66EE
 
     .db INSTR_SET_PPU
     .word $2202 ; PPU address
     .db "Golem         "
-    .db INSTR_MON_STAT, 24
+    .db INSTR_MON_STAT, 24    ; 0x66F0
 
     .db INSTR_SET_PPU
     .word $2242 ; PPU address
     .db "Goldman       "
-    .db INSTR_MON_STAT, 25
+    .db INSTR_MON_STAT, 25    ; 0x66F2
 
     .db INSTR_SET_PPU
     .word $2282 ; PPU address
     .db "Knight        "
-    .db INSTR_MON_STAT, 26
+    .db INSTR_MON_STAT, 26    ; 0x66F4
 
     .db INSTR_SET_PPU
     .word $22c2 ; PPU address
     .db "Magiwyvern    "
-    .db INSTR_MON_STAT, 27
+    .db INSTR_MON_STAT, 27    ; 0x66F6
 
     .db INSTR_SET_PPU
     .word $2302 ; PPU address
     .db "Demon Knight  "
-    .db INSTR_MON_STAT, 28
+    .db INSTR_MON_STAT, 28    ; 0x66F8
 
     .db INSTR_SET_PPU
     .word $2342 ; PPU address
     .db "Werewolf      "
-    .db INSTR_MON_STAT, 29
+    .db INSTR_MON_STAT, 29    ; 0x66FA
 
     .db INSTR_WAIT, 240
 
     .db INSTR_SET_PPU
     .word $2102 ; PPU address
     .db "Green Dragon  " ; /* 30 */
-    .db INSTR_MON_STAT, 30
+    .db INSTR_MON_STAT, 30    ; 0x66FC
 
     .db INSTR_SET_PPU
     .word $2142 ; PPU address
     .db "Starwyvern    "
-    .db INSTR_MON_STAT, 31
+    .db INSTR_MON_STAT, 31    ; 0x66FE
 
     .db INSTR_SET_PPU
     .word $2182 ; PPU address
     .db "Wizard        "
-    .db INSTR_MON_STAT, 32
+    .db INSTR_MON_STAT, 32    ; 0x6700
 
     .db INSTR_SET_PPU
     .word $21c2 ; PPU address
     .db "Axe Knight    "
-    .db INSTR_MON_STAT, 33
+    .db INSTR_MON_STAT, 33    ; 0x6702
 
     .db INSTR_SET_PPU
     .word $2202 ; PPU address
     .db "Blue Dragon   "
-    .db INSTR_MON_STAT, 34
+    .db INSTR_MON_STAT, 34    ; 0x6704
 
     .db INSTR_SET_PPU
     .word $2242 ; PPU address
     .db "Stoneman      "
-    .db INSTR_MON_STAT, 35
+    .db INSTR_MON_STAT, 35    ; 0x6706
 
     .db INSTR_SET_PPU
     .word $2282 ; PPU address
     .db "Armored Knight"
-    .db INSTR_MON_STAT, 36
+    .db INSTR_MON_STAT, 36    ; 0x6708
 
     .db INSTR_SET_PPU
     .word $22c2 ; PPU address
     .db "Red Dragon    "
-    .db INSTR_MON_STAT, 37
+    .db INSTR_MON_STAT, 37    ; 0x670A
 
     .db INSTR_SET_PPU
     .word $2302 ; PPU address
     .db "Dragonlord 1  "
-    .db INSTR_MON_STAT, 38
+    .db INSTR_MON_STAT, 38    ; 0x670C
 
     .db INSTR_SET_PPU
     .word $2342 ; PPU address
     .db "Dragonlord 2  "
-    .db INSTR_MON_STAT, 39
+    .db INSTR_MON_STAT, 39    ; 0x670E
 
     .db INSTR_WAIT, 240
 

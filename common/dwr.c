@@ -3424,7 +3424,7 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
     const uint16_t save_index_newcode = find_free_space(rom->content, 0xc422, 11);
 
     // Hook into SaveData
-    vpatch(rom, 0xFA18, 4, 0x20, save_index_newcode & 0xff, (save_index_newcode >> 8) & 0xff, 0xea);
+    vpatch(rom, 0xFA18, 4, 0x20, save_index_newcode & 0xFF, (save_index_newcode >> 8) & 0xFF, 0xEA);
 
     // Save item received index in RAM (0x0E) to index in SRAM (0x16 relative to start of save file)
     vpatch(rom, save_index_newcode, 11,
@@ -3438,7 +3438,7 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
     const uint16_t load_index_newcode = find_free_space(rom->content, 0xc422, 11);
 
     // Hook into LoadSavedData
-    vpatch(rom, 0xFB6B, 4, 0x20, load_index_newcode & 0xff, (load_index_newcode >> 8) & 0xff, 0xea);
+    vpatch(rom, 0xFB6B, 4, 0x20, load_index_newcode & 0xFF, (load_index_newcode >> 8) & 0xFF, 0xEA);
 
     // Load item received index from SRAM to RAM
     vpatch(rom, load_index_newcode, 11,
@@ -3477,7 +3477,7 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
         // Erdrick's Token
         vpatch(rom, 0xE11D, 8, 
             0xA9, 0x81,           // LDA 0x81 (Immediate Value)
-            0x8D, 0x01, 0x00,     // STA 0x0001
+            0x8D, 0xB9, 0x00,     // STA 0x00B9
             0x4C, 0x4C, 0xE3      // JMP 0xE34C
         );
 
@@ -3494,35 +3494,32 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
         vpatch(rom, 0xE177, 18, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
     }
 
-    // Get rid of DmgNotUsed appearances just to be safe
-    vpatch(rom, 0xE668, 2, 0xEA, 0xEA);
-    vpatch(rom, 0xE698, 2, 0xEA, 0xEA);
-    vpatch(rom, 0xECFA, 2, 0xEA, 0xEA);
-    vpatch(rom, 0xED27, 2, 0xEA, 0xEA);
+    // Remove setting 0xB9 at the start of the game
+    vpatch(rom, 0xCA0D, 2, 0xEA, 0xEA);
 
     // Make rainbow drop a remote item
     vpatch(rom, 0xD385, 5, 
         0xA9, 0xFF,           // LDA 0xFF (Immediate Value)
-        0x8D, 0x01, 0x00      // STA 0x0001
+        0x8D, 0xB9, 0x00      // STA 0x00B9
     );
 
-    // Shopsanity: Make buying equipment write to 0x01 in RAM instead of equipping it
+    // Shopsanity: Make buying equipment write to 0xB9 in RAM instead of equipping it
     if (shopsanity) {
         // Weapons
         vpatch(rom, 0xD627, 10, 
-            0x8D, 0x01, 0x00,     // STA 0x0001
+            0x8D, 0xB9, 0x00,     // STA 0x00B9
             0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA
         );
 
         // Armor
         vpatch(rom, 0xD645, 10, 
-            0x8D, 0x01, 0x00,     // STA 0x0001
+            0x8D, 0xB9, 0x00,     // STA 0x00B9
             0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA
         );
 
         // Shield
         vpatch(rom, 0xD654, 10, 
-            0x8D, 0x01, 0x00,     // STA 0x0001
+            0x8D, 0xB9, 0x00,     // STA 0x00B9
             0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA
         );
 
@@ -3537,6 +3534,38 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
         );
     }
 
+    // Deathlink 
+    const uint16_t deathlink_newcode = find_free_space(rom->content, 0xc422, 12);
+
+    vpatch(rom, 0xEDB8, 5, 0x20, deathlink_newcode & 0xFF, (deathlink_newcode >> 8) & 0xFF, 0xEA, 0xEA);
+
+    // When dying, set the 0x20 bit of the StoryFlags value to indicate we should send a Deathlink out
+    vpatch(rom, deathlink_newcode, 12,
+        0xA9, 0x20,           // LDA #$20 (Immediate Value)
+        0x05, 0xE4,           // ORA 0xE4
+        0x85, 0xE4,           // STA 0xE4
+        0xA9, 0x78,           // LDA #STRT_FULL_HP
+        0x8D, 0x3A, 0x60,     // STA ThisStrtStat
+        0x60                  // RTS
+    );
+
+    const uint16_t set_deathlink_newcode = find_free_space(rom->content, 0xc422, 14);
+
+    vpatch(rom, 0xCCF6, 4, 0x20, set_deathlink_newcode & 0xFF, (set_deathlink_newcode >> 8) & 0xFF, 0xEA);
+
+    // If the 0x10 bit of StoryFlags is set, then we've received a Deathlink and should die
+    vpatch(rom, set_deathlink_newcode, 14,
+        0xA5, 0xE4,           // LDA StoryFlags
+        0x29, 0x10,           // AND #$10
+        0xF0, 0x03,           // BEQ #$03
+        0x4C, 0xE6, 0xCD,     // JMP InitDeathSequence
+        0xA5, 0xBE,           // LDA EquippedItems  (Original Code)
+        0x29, 0x1C,           // AND #AR_ARMOR      (Original Code)
+        0x60                  // RTS
+    );
+    
+    printf("The deathlink_newcode is at: %04x" PRIu16 "\n", deathlink_newcode);
+    printf("The set_deathlink_newcode is at: %04x" PRIu16 "\n", set_deathlink_newcode);
 
     // Write AP signature and version
     const int major = 0x30 + strtol((char[2]) { (char) vers[0], '\0' }, NULL, 10);
