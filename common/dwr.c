@@ -2339,7 +2339,7 @@ void setup_expansion(dw_rom *rom)
     bank_3_patch(rom);
     fill_expansion(rom);
 
-    int track = mt_rand(0, track_count - 1);
+    int track = 10;
     add_music(rom, track);
 }
 
