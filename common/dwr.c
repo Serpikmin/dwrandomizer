@@ -2339,7 +2339,7 @@ void setup_expansion(dw_rom *rom)
     bank_3_patch(rom);
     fill_expansion(rom);
 
-    int track = 10;
+    int track = 10;  // Set to critical move to avoid copywrited songs
     add_music(rom, track);
 }
 
@@ -3602,7 +3602,7 @@ void apply_stuff_to_rom(dw_rom *rom, char* vers, bool searches, bool shopsanity)
     do_chest_flags(rom);
     stair_shuffle(rom);
     check_quest_items(rom);
-    //map_generate_terrain(rom);
+    map_generate_terrain(rom);
     spike_rewrite(rom);
     randomize_attack_patterns(rom);
     randomize_zone_layout(rom);

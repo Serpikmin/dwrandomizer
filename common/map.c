@@ -977,6 +977,10 @@ void map_generate_terrain(dw_rom *rom)
     int i, j, x, y, lm_sizes[256], max_fill;
     int largest, next, total_area;
 
+    if (!RANDOM_MAP(rom)) {
+        return;
+    }
+
     check_keys(rom);
 
     if (SMALL_MAP(rom)) {
