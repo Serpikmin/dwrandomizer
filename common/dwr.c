@@ -3563,6 +3563,12 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
         0x29, 0x1C,           // AND #AR_ARMOR      (Original Code)
         0x60                  // RTS
     );
+
+    // Update some code for checking the Token's location if random map is enabled
+    if (RANDOM_MAP(rom)) {
+        vpatch(rom, 0xE114, 1, rom->search_table->x[0]);
+        vpatch(rom, 0xE11A, 1, rom->search_table->y[0]);
+    }
     
     printf("The deathlink_newcode is at: %04x" PRIu16 "\n", deathlink_newcode);
     printf("The set_deathlink_newcode is at: %04x" PRIu16 "\n", set_deathlink_newcode);
