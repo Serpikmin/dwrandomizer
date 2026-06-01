@@ -3472,6 +3472,11 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
     // Prevent Gwaelin's Love from being added to inventory
     vpatch(rom, 0xD3BC, 3, 0x4C, 0xEF, 0xD3);
 
+    // Patch chest glitch
+    // vpatch(rom, 0xEDBD, 0,
+    
+    // );
+
     // Replace Search Spot items with APItem and write to RAM they were found
     if (searches) {
         // Erdrick's Token
@@ -3535,15 +3540,21 @@ void ap_changes(dw_rom *rom, char* vers, bool searches, bool shopsanity)
     }
 
     // Deathlink 
-    const uint16_t deathlink_newcode = find_free_space(rom->content, 0xc422, 12);
+    const uint16_t deathlink_newcode = find_free_space(rom->content, 0xc422, 22);
 
     vpatch(rom, 0xEDB8, 5, 0x20, deathlink_newcode & 0xFF, (deathlink_newcode >> 8) & 0xFF, 0xEA, 0xEA);
 
     // When dying, set the 0x20 bit of the StoryFlags value to indicate we should send a Deathlink out
-    vpatch(rom, deathlink_newcode, 12,
+    vpatch(rom, deathlink_newcode, 22,
         0xA9, 0x20,           // LDA #$20 (Immediate Value)
         0x05, 0xE4,           // ORA 0xE4
         0x85, 0xE4,           // STA 0xE4
+        // Also patch the chest glitch here (code taken from ContineReset @ LC9C3)
+        0xA9, 0x00,           // STA #$00 (Immediate Value)
+        0x9D, 0x1C, 0x60,     // STA TrsrXPos,X
+        0xE8,                 // INX
+        0xE0, 0x10,           // CPX #$10
+        0x90, 0xF8,           // BCC -
         0xA9, 0x78,           // LDA #STRT_FULL_HP
         0x8D, 0x3A, 0x60,     // STA ThisStrtStat
         0x60                  // RTS
